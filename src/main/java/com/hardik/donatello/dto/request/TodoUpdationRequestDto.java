@@ -19,17 +19,17 @@ import lombok.Getter;
 public class TodoUpdationRequestDto {
 
 	@Schema(description = "Id of TODO to be updated", required = true, example = "ca74bac4-253d-4c4f-a446-4e07fa338810")
-	@NotBlank
+	@NotBlank(message = "id must not be empty")
 	private final UUID id;
 
 	@Schema(description = "Description of Todo", required = true, example = "Through YT videos")
-	@NotBlank
-	@Size(max = 500)
+	@NotBlank(message = "Description must not be empty")
+	@Size(max = 500, message = "Description cannot exceed more than 500 characters")
 	private final String description;
 
 	@Schema(description = "Predicted due date of created Todo", required = true, example = "2021-05-14")
-	@NotBlank
-	@FutureOrPresent
+	@NotBlank(message = "Due-date must not be empty")
+	@FutureOrPresent(message = "Due Date cannot be a past date")
 	private final LocalDate dueDate;
 
 }

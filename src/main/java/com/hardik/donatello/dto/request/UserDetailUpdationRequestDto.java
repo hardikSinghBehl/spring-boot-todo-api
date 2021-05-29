@@ -15,12 +15,12 @@ import lombok.Getter;
 public class UserDetailUpdationRequestDto {
 
 	@Schema(description = "Firstname of user", required = true, example = "Hardik Singh")
-	@NotBlank
-	@Size(max = 50)
+	@NotBlank(message = "Firstname must not be empty")
+	@Size(max = 50, message = "Firstname should not exceed more than 50 characters")
 	private final String firstName;
 
 	@Schema(description = "Lastname of user", required = true, example = "Behl")
-	@NotBlank
-	@Size(max = 50)
+	@NotBlank(message = "Lastname must not be empty")
+	@Size(max = 50, message = "Lastname should not exceed more than 50 characters")
 	private final String lastName;
 }

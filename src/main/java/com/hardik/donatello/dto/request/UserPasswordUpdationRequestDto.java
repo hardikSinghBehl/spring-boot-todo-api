@@ -15,13 +15,13 @@ import lombok.Getter;
 public class UserPasswordUpdationRequestDto {
 
 	@Schema(description = "Current Password of user", required = true)
-	@NotBlank
-	@Size(min = 5, max = 15)
+	@NotBlank(message = "Old/Current-Password must not be empty")
+	@Size(min = 5, max = 15, message = "Password lenght should be between 5-15 characters")
 	private final String oldPassword;
 
 	@Schema(description = "New Password of user", required = true)
-	@NotBlank
-	@Size(min = 5, max = 15)
+	@NotBlank(message = "New Password must not be empty")
+	@Size(min = 5, max = 15, message = "Password lenght should be between 5-15 characters")
 	private final String newPassword;
 
 }
