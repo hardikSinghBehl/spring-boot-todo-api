@@ -54,11 +54,10 @@ public class JwtUtils {
 		return extractExpiration(token).before(new Date());
 	}
 
-	public String generateToken(User user, UUID totalBalanceId) {
+	public String generateToken(User user) {
 		Map<String, Object> claims = new HashMap<>();
 		claims.put("account_creation_timestamp", user.getCreatedAt().toString());
 		claims.put("user_id", user.getId());
-		claims.put("total_balance_id", totalBalanceId);
 		claims.put("name", user.getFirstName() + " " + user.getLastName());
 		claims.put("scope", "user");
 		return createToken(claims, user.getEmail());
