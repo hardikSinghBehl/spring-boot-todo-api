@@ -42,10 +42,10 @@ public class Todo implements Serializable {
 	@Column(name = "user_id", nullable = false)
 	private UUID userId;
 
-	@Column(name = "title", nullable = false)
+	@Column(name = "title", nullable = false, length = 100)
 	private String title;
 
-	@Column(name = "description", nullable = false)
+	@Column(name = "description", nullable = false, length = 500)
 	private String description;
 
 	@Column(name = "due_date", nullable = false)
