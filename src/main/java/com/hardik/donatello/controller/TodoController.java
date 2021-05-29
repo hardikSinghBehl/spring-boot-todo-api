@@ -3,6 +3,8 @@ package com.hardik.donatello.controller;
 import java.util.List;
 import java.util.UUID;
 
+import javax.validation.Valid;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -47,7 +49,7 @@ public class TodoController {
 	@ResponseStatus(HttpStatus.OK)
 	@Operation(summary = "Creates a todo for a user")
 	public ResponseEntity<?> todoCreatonHandler(
-			@RequestBody(required = true) final TodoCreationRequestDto todoCreationRequestDto,
+			@Valid @RequestBody(required = true) final TodoCreationRequestDto todoCreationRequestDto,
 			@RequestHeader(name = "Authorization", required = true) @Parameter(hidden = true) final String token) {
 		return todoService.create(jwtUtils.extractUserId(token.replace("Bearer ", "")), todoCreationRequestDto);
 	}
@@ -56,7 +58,7 @@ public class TodoController {
 	@ResponseStatus(HttpStatus.OK)
 	@Operation(summary = "Updates description and/or due-date of todo")
 	public ResponseEntity<?> todoUpdationHandler(
-			@RequestBody(required = true) final TodoUpdationRequestDto todoUpdationRequestDto,
+			@Valid @RequestBody(required = true) final TodoUpdationRequestDto todoUpdationRequestDto,
 			@RequestHeader(name = "Authorization", required = true) @Parameter(hidden = true) final String token) {
 		return todoService.update(jwtUtils.extractUserId(token.replace("Bearer ", "")), todoUpdationRequestDto);
 	}

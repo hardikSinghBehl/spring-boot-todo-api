@@ -1,5 +1,7 @@
 package com.hardik.donatello.controller;
 
+import javax.validation.Valid;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -33,7 +35,7 @@ public class AuthenticationController {
 	@ResponseStatus(HttpStatus.OK)
 	@Operation(summary = "Creates a new user account")
 	public ResponseEntity<?> userCreationHandler(
-			@RequestBody(required = true) final UserCreationRequestDto userCreationRequestDto) {
+			@Valid @RequestBody(required = true) final UserCreationRequestDto userCreationRequestDto) {
 		return userService.create(userCreationRequestDto);
 	}
 
@@ -41,7 +43,7 @@ public class AuthenticationController {
 	@ResponseStatus(HttpStatus.OK)
 	@Operation(summary = "Logs in user and returns corresponding id")
 	public ResponseEntity<?> userLogInHandler(
-			@RequestBody(required = true) final UserLoginRequestDto userLoginRequestDto) {
+			@Valid @RequestBody(required = true) final UserLoginRequestDto userLoginRequestDto) {
 		return userService.login(userLoginRequestDto);
 	}
 
@@ -49,7 +51,7 @@ public class AuthenticationController {
 	@ResponseStatus(HttpStatus.OK)
 	@Operation(summary = "Changes logged-in user's password")
 	public ResponseEntity<?> userPasswordUpdationHandler(
-			@RequestBody(required = true) final UserPasswordUpdationRequestDto userPasswordUpdationRequestDto,
+			@Valid @RequestBody(required = true) final UserPasswordUpdationRequestDto userPasswordUpdationRequestDto,
 			@RequestHeader(name = "Authorization", required = true) @Parameter(hidden = true) final String token) {
 		return userService.update(jwtUtils.extractUserId(token.replace("Bearer ", "")), userPasswordUpdationRequestDto);
 	}

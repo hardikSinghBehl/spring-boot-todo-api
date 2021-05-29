@@ -1,5 +1,7 @@
 package com.hardik.donatello.controller;
 
+import javax.validation.Valid;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -41,7 +43,7 @@ public class UserController {
 	@ResponseStatus(HttpStatus.OK)
 	@Operation(summary = "Updates logged-in user's profile details")
 	public ResponseEntity<?> userDeatilUpdationHandler(
-			@RequestBody(required = true) final UserDetailUpdationRequestDto userDetailUpdationRequestDto,
+			@Valid @RequestBody(required = true) final UserDetailUpdationRequestDto userDetailUpdationRequestDto,
 			@RequestHeader(name = "Authorization", required = true) @Parameter(hidden = true) final String token) {
 		return userService.update(jwtUtils.extractUserId(token.replace("Bearer ", "")), userDetailUpdationRequestDto);
 	}
