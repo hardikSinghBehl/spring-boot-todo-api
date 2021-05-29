@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.hardik.donatello.constant.ApiConstant;
 import com.hardik.donatello.dto.request.UserDetailUpdationRequestDto;
 import com.hardik.donatello.dto.response.UserDetailDto;
 import com.hardik.donatello.security.utility.JwtUtils;
@@ -20,7 +21,7 @@ import lombok.AllArgsConstructor;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/user")
+@RequestMapping(value = ApiConstant.BASE_USER_PATH)
 public class UserController {
 
 	private final UserService userService;
@@ -34,7 +35,7 @@ public class UserController {
 		return userService.retrieve(jwtUtils.extractUserId(token.replace("Bearer ", "")));
 	}
 
-	@PutMapping("/detail")
+	@PutMapping(value = ApiConstant.DETAILS)
 	@ResponseStatus(HttpStatus.OK)
 	@Operation(summary = "Updates logged-in user's profile details")
 	public void userDeatilUpdationHandler(

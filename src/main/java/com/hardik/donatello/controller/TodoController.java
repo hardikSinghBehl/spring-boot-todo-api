@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.hardik.donatello.constant.ApiConstant;
 import com.hardik.donatello.dto.request.TodoCreationRequestDto;
 import com.hardik.donatello.dto.request.TodoUpdationRequestDto;
 import com.hardik.donatello.dto.response.TodoDto;
@@ -27,13 +28,13 @@ import lombok.AllArgsConstructor;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/todo")
+@RequestMapping(value = ApiConstant.BASE_TODO_PATH)
 public class TodoController {
 
 	private final TodoService todoService;
 	private final JwtUtils jwtUtils;
 
-	@GetMapping("/all")
+	@GetMapping(value = ApiConstant.ALL)
 	@ResponseStatus(HttpStatus.OK)
 	@Operation(summary = "Returns all todos created by user")
 	public List<TodoDto> todosReteivalHandler(

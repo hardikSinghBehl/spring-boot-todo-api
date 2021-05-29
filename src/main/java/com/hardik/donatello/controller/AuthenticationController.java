@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.hardik.donatello.constant.ApiConstant;
 import com.hardik.donatello.dto.request.UserCreationRequestDto;
 import com.hardik.donatello.dto.request.UserLoginRequestDto;
 import com.hardik.donatello.dto.request.UserPasswordUpdationRequestDto;
@@ -22,20 +23,20 @@ import lombok.AllArgsConstructor;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/user")
+@RequestMapping(value = ApiConstant.BASE_USER_PATH)
 public class AuthenticationController {
 
 	private final UserService userService;
 	private final JwtUtils jwtUtils;
 
-	@PostMapping(value = "/auth/register")
+	@PostMapping(value = ApiConstant.AUTH + ApiConstant.REGISTER)
 	@ResponseStatus(HttpStatus.OK)
 	@Operation(summary = "Creates a new user account")
 	public void userCreationHandler(@RequestBody(required = true) final UserCreationRequestDto userCreationRequestDto) {
 		userService.create(userCreationRequestDto);
 	}
 
-	@PostMapping("/auth/login")
+	@PostMapping(value = ApiConstant.AUTH + ApiConstant.LOGIN)
 	@ResponseStatus(HttpStatus.OK)
 	@Operation(summary = "Logs in user and returns corresponding id")
 	public ResponseEntity<?> userLogInHandler(
@@ -43,9 +44,9 @@ public class AuthenticationController {
 		return userService.login(userLoginRequestDto);
 	}
 
-	@PutMapping("/password")
+	@PutMapping(value = ApiConstant.PASSWORD)
 	@ResponseStatus(HttpStatus.OK)
-	@Operation(summary = "Changes Logged-in user's password")
+	@Operation(summary = "Changes logged-in user's password")
 	public void userPasswordUpdationHandler(
 			@RequestBody(required = true) final UserPasswordUpdationRequestDto userPasswordUpdationRequestDto,
 			@RequestHeader(name = "Authorization", required = true) @Parameter(hidden = true) final String token) {
