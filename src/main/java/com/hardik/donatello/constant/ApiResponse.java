@@ -21,4 +21,6 @@ public class ApiResponse {
 	public static final String UNAUTHORIZE = "You Are Unauthorized to perform this action";
 	public static final String TODO_UPDATION_SUCCESS = "Todo Updated Successfully!";
 	public static final String TODO_CREATION_SUCCESS = "Todo Created Successfully!";
+	public static final String INVALID_TODO_ID = "Invalid todo-id provided, No todo with provided id exists in the system";
+	public static final String INVALID_USER_ID = "Invalid user-id provided, No User with provided id exists in the system";
 }

@@ -2,6 +2,7 @@ package com.hardik.donatello.service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -34,9 +35,8 @@ public class TodoService {
 				() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "No User Exists WIth the Specified Id"));
 	}
 
-	private Todo getTodo(final UUID todoId) {
-		return todoRepository.findById(todoId).orElseThrow(
-				() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "No Todo Exists WIth the Specified Id"));
+	private Optional<Todo> getTodo(final UUID todoId) {
+		return todoRepository.findById(todoId);
 	}
 
 	public ResponseEntity<List<TodoDto>> retreive(final UUID userId) {
@@ -64,7 +64,12 @@ public class TodoService {
 	}
 
 	public ResponseEntity<?> update(final UUID userId, final TodoUpdationRequestDto todoUpdationRequest) {
-		final var todo = getTodo(todoUpdationRequest.getId());
+		final var optionalTodo = getTodo(todoUpdationRequest.getId());
+
+		if (optionalTodo.isEmpty())
+			return responseUtil.todoNotFoundResponse();
+
+		final var todo = optionalTodo.get();
 
 		if (!todo.getUserId().equals(userId))
 			return responseUtil.genericUnauthorizeResponse();
@@ -79,7 +84,12 @@ public class TodoService {
 	}
 
 	public ResponseEntity<?> update(UUID userId, UUID todoId) {
-		final var todo = getTodo(todoId);
+		final var optionalTodo = getTodo(todoId);
+
+		if (optionalTodo.isEmpty())
+			return responseUtil.todoNotFoundResponse();
+
+		final var todo = optionalTodo.get();
 
 		if (!todo.getUserId().equals(userId))
 			return responseUtil.genericUnauthorizeResponse();
@@ -93,7 +103,12 @@ public class TodoService {
 	}
 
 	public ResponseEntity<?> remove(final UUID userId, final UUID todoId) {
-		final var todo = getTodo(todoId);
+		final var optionalTodo = getTodo(todoId);
+
+		if (optionalTodo.isEmpty())
+			return responseUtil.todoNotFoundResponse();
+
+		final var todo = optionalTodo.get();
 
 		if (!todo.getUserId().equals(userId))
 			return responseUtil.genericUnauthorizeResponse();

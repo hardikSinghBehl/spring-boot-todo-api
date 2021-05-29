@@ -117,4 +117,12 @@ public class ResponseUtil {
 		return ResponseEntity.status(HttpStatus.OK).body(response.toString());
 	}
 
+	public ResponseEntity<?> todoNotFoundResponse() {
+		final var response = new JSONObject();
+		response.put(ApiResponse.STATUS, ApiResponse.FAILURE_STATUS);
+		response.put(ApiResponse.MESSAGE, ApiResponse.INVALID_TODO_ID);
+		response.put(ApiResponse.TIMESTAMP, LocalDateTime.now().toString());
+		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response.toString());
+	}
+
 }
