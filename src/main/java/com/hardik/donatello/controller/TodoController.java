@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -37,7 +38,7 @@ public class TodoController {
 	@GetMapping(value = ApiConstant.ALL)
 	@ResponseStatus(HttpStatus.OK)
 	@Operation(summary = "Returns all todos created by user")
-	public List<TodoDto> todosReteivalHandler(
+	public ResponseEntity<List<TodoDto>> todosReteivalHandler(
 			@RequestHeader(name = "Authorization", required = true) @Parameter(hidden = true) final String token) {
 		return todoService.retreive(jwtUtils.extractUserId(token.replace("Bearer ", "")));
 	}
@@ -45,33 +46,36 @@ public class TodoController {
 	@PostMapping
 	@ResponseStatus(HttpStatus.OK)
 	@Operation(summary = "Creates a todo for a user")
-	public void todoCreatonHandler(@RequestBody(required = true) final TodoCreationRequestDto todoCreationRequestDto,
+	public ResponseEntity<?> todoCreatonHandler(
+			@RequestBody(required = true) final TodoCreationRequestDto todoCreationRequestDto,
 			@RequestHeader(name = "Authorization", required = true) @Parameter(hidden = true) final String token) {
-		todoService.create(jwtUtils.extractUserId(token.replace("Bearer ", "")), todoCreationRequestDto);
+		return todoService.create(jwtUtils.extractUserId(token.replace("Bearer ", "")), todoCreationRequestDto);
 	}
 
 	@PutMapping
 	@ResponseStatus(HttpStatus.OK)
 	@Operation(summary = "Updates description and/or due-date of todo")
-	public void todoUpdationHandler(@RequestBody(required = true) final TodoUpdationRequestDto todoUpdationRequestDto,
+	public ResponseEntity<?> todoUpdationHandler(
+			@RequestBody(required = true) final TodoUpdationRequestDto todoUpdationRequestDto,
 			@RequestHeader(name = "Authorization", required = true) @Parameter(hidden = true) final String token) {
-		todoService.update(jwtUtils.extractUserId(token.replace("Bearer ", "")), todoUpdationRequestDto);
+		return todoService.update(jwtUtils.extractUserId(token.replace("Bearer ", "")), todoUpdationRequestDto);
 	}
 
 	@PutMapping("/{todoId}")
 	@ResponseStatus(HttpStatus.OK)
 	@Operation(summary = "Marks todo as completed (in-active)")
-	public void todoStatusUpdationHandler(@PathVariable(name = "todoId", required = true) final UUID todoId,
+	public ResponseEntity<?> todoStatusUpdationHandler(
+			@PathVariable(name = "todoId", required = true) final UUID todoId,
 			@RequestHeader(name = "Authorization", required = true) @Parameter(hidden = true) final String token) {
-		todoService.update(jwtUtils.extractUserId(token.replace("Bearer ", "")), todoId);
+		return todoService.update(jwtUtils.extractUserId(token.replace("Bearer ", "")), todoId);
 	}
 
 	@DeleteMapping("/{todoId}")
 	@ResponseStatus(HttpStatus.OK)
 	@Operation(summary = "Deletes a todo")
-	public void todoDeletionHandler(@PathVariable(name = "todoId", required = true) final UUID todoId,
+	public ResponseEntity<?> todoDeletionHandler(@PathVariable(name = "todoId", required = true) final UUID todoId,
 			@RequestHeader(name = "Authorization", required = true) @Parameter(hidden = true) final String token) {
-		todoService.remove(jwtUtils.extractUserId(token.replace("Bearer ", "")), todoId);
+		return todoService.remove(jwtUtils.extractUserId(token.replace("Bearer ", "")), todoId);
 	}
 
 }

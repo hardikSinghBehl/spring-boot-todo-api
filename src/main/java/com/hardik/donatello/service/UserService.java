@@ -16,6 +16,7 @@ import com.hardik.donatello.dto.response.UserDetailDto;
 import com.hardik.donatello.entity.User;
 import com.hardik.donatello.repository.UserRepository;
 import com.hardik.donatello.security.utility.JwtUtils;
+import com.hardik.donatello.utility.ResponseUtil;
 
 import lombok.AllArgsConstructor;
 
@@ -26,57 +27,71 @@ public class UserService {
 	private final UserRepository userRepository;
 	private final PasswordEncoder passwordEncoder;
 	private final JwtUtils jwtUtils;
+	private final ResponseUtil responseUtil;
 
 	private User getUser(final UUID userId) {
 		return userRepository.findById(userId).orElseThrow(
 				() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "No User Exists WIth the Specified Id"));
 	}
 
-	public UserDetailDto retrieve(final UUID userId) {
+	public ResponseEntity<UserDetailDto> retrieve(final UUID userId) {
 		final var user = getUser(userId);
-		return UserDetailDto.builder().emailId(user.getEmail()).firstName(user.getFirstName())
-				.lastName(user.getLastName()).createdAt(user.getCreatedAt()).updatedAt(user.getUpdatedAt()).build();
+		return ResponseEntity.ok(UserDetailDto.builder().emailId(user.getEmail()).firstName(user.getFirstName())
+				.lastName(user.getLastName()).createdAt(user.getCreatedAt()).updatedAt(user.getUpdatedAt()).build());
 	}
 
-	public void create(final UserCreationRequestDto userCreationRequest) {
+	public ResponseEntity<?> create(final UserCreationRequestDto userCreationRequest) {
 
 		if (userRepository.existsByEmail(userCreationRequest.getEmailId()))
-			throw new ResponseStatusException(HttpStatus.CONFLICT, "User Already Exists Woth Specified Email Id");
+			return responseUtil.duplicateEmailIdResponse();
 
 		final var user = new User();
 		user.setEmail(userCreationRequest.getEmailId());
 		user.setFirstName(userCreationRequest.getFirstName());
 		user.setLastName(userCreationRequest.getLastName());
 		user.setPassword(passwordEncoder.encode(userCreationRequest.getPassword()));
-		userRepository.save(user);
+		final var savedUser = userRepository.save(user);
+
+		if (savedUser != null)
+			return responseUtil.userCreationSuccessResponse();
+		else
+			return responseUtil.userCreationFailureResponse();
 	}
 
 	public ResponseEntity<?> login(final UserLoginRequestDto userLoginRequest) {
 		final var user = userRepository.findByEmail(userLoginRequest.getEmailId());
 		if (user.isEmpty())
-			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Wrong Email-id Provided");
+			return responseUtil.wrongEmailIdProvided();
 		if (passwordEncoder.matches(userLoginRequest.getPassword(), user.get().getPassword())) {
 			final var retreivedUser = user.get();
 			final var jwtToken = jwtUtils.generateToken(retreivedUser);
-			return ResponseEntity.ok(jwtToken);
+			return responseUtil.loginSuccessResponse(jwtToken);
 		}
-		throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Wrong Password Provided");
+		return responseUtil.wrongPasswordProvided();
 	}
 
-	public void update(final UUID userId, final UserDetailUpdationRequestDto userDetailUpdationRequest) {
+	public ResponseEntity<?> update(final UUID userId, final UserDetailUpdationRequestDto userDetailUpdationRequest) {
 		final var user = getUser(userId);
 		user.setFirstName(userDetailUpdationRequest.getFirstName());
 		user.setLastName(userDetailUpdationRequest.getLastName());
-		userRepository.save(user);
+		final var updatedUser = userRepository.save(user);
+		if (updatedUser != null)
+			return responseUtil.userDetailsUpdationSuccessResponse();
+		else
+			return responseUtil.genericFailureResponse();
 	}
 
-	public void update(UUID userId, UserPasswordUpdationRequestDto userPasswordUpdationRequest) {
+	public ResponseEntity<?> update(UUID userId, UserPasswordUpdationRequestDto userPasswordUpdationRequest) {
 		final var user = getUser(userId);
 		if (!passwordEncoder.matches(userPasswordUpdationRequest.getOldPassword(), user.getPassword()))
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Wrong Password Provided");
 
 		user.setPassword(passwordEncoder.encode(userPasswordUpdationRequest.getNewPassword()));
-		userRepository.save(user);
+		final var updatedUser = userRepository.save(user);
+		if (updatedUser != null)
+			return responseUtil.userPasswordUpdationSuccessResponse();
+		else
+			return responseUtil.genericFailureResponse();
 	}
 
 }

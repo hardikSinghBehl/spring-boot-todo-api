@@ -32,8 +32,9 @@ public class AuthenticationController {
 	@PostMapping(value = ApiConstant.AUTH + ApiConstant.REGISTER)
 	@ResponseStatus(HttpStatus.OK)
 	@Operation(summary = "Creates a new user account")
-	public void userCreationHandler(@RequestBody(required = true) final UserCreationRequestDto userCreationRequestDto) {
-		userService.create(userCreationRequestDto);
+	public ResponseEntity<?> userCreationHandler(
+			@RequestBody(required = true) final UserCreationRequestDto userCreationRequestDto) {
+		return userService.create(userCreationRequestDto);
 	}
 
 	@PostMapping(value = ApiConstant.AUTH + ApiConstant.LOGIN)
@@ -47,9 +48,9 @@ public class AuthenticationController {
 	@PutMapping(value = ApiConstant.PASSWORD)
 	@ResponseStatus(HttpStatus.OK)
 	@Operation(summary = "Changes logged-in user's password")
-	public void userPasswordUpdationHandler(
+	public ResponseEntity<?> userPasswordUpdationHandler(
 			@RequestBody(required = true) final UserPasswordUpdationRequestDto userPasswordUpdationRequestDto,
 			@RequestHeader(name = "Authorization", required = true) @Parameter(hidden = true) final String token) {
-		userService.update(jwtUtils.extractUserId(token.replace("Bearer ", "")), userPasswordUpdationRequestDto);
+		return userService.update(jwtUtils.extractUserId(token.replace("Bearer ", "")), userPasswordUpdationRequestDto);
 	}
 }

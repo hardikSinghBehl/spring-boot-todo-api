@@ -1,6 +1,7 @@
 package com.hardik.donatello.controller;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -30,7 +31,7 @@ public class UserController {
 	@GetMapping
 	@ResponseStatus(HttpStatus.OK)
 	@Operation(summary = "Returns logged-in user's profile details")
-	public UserDetailDto userDetailsRetreivalHandler(
+	public ResponseEntity<UserDetailDto> userDetailsRetreivalHandler(
 			@RequestHeader(name = "Authorization", required = true) @Parameter(hidden = true) final String token) {
 		return userService.retrieve(jwtUtils.extractUserId(token.replace("Bearer ", "")));
 	}
@@ -38,10 +39,10 @@ public class UserController {
 	@PutMapping(value = ApiConstant.DETAILS)
 	@ResponseStatus(HttpStatus.OK)
 	@Operation(summary = "Updates logged-in user's profile details")
-	public void userDeatilUpdationHandler(
+	public ResponseEntity<?> userDeatilUpdationHandler(
 			@RequestBody(required = true) final UserDetailUpdationRequestDto userDetailUpdationRequestDto,
 			@RequestHeader(name = "Authorization", required = true) @Parameter(hidden = true) final String token) {
-		userService.update(jwtUtils.extractUserId(token.replace("Bearer ", "")), userDetailUpdationRequestDto);
+		return userService.update(jwtUtils.extractUserId(token.replace("Bearer ", "")), userDetailUpdationRequestDto);
 	}
 
 }

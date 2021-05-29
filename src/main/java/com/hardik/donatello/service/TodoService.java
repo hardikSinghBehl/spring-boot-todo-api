@@ -6,6 +6,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -16,6 +17,7 @@ import com.hardik.donatello.entity.Todo;
 import com.hardik.donatello.entity.User;
 import com.hardik.donatello.repository.TodoRepository;
 import com.hardik.donatello.repository.UserRepository;
+import com.hardik.donatello.utility.ResponseUtil;
 
 import lombok.AllArgsConstructor;
 
@@ -24,8 +26,8 @@ import lombok.AllArgsConstructor;
 public class TodoService {
 
 	private final TodoRepository todoRepository;
-
 	private final UserRepository userRepository;
+	private final ResponseUtil responseUtil;
 
 	private User getUser(final UUID userId) {
 		return userRepository.findById(userId).orElseThrow(
@@ -37,16 +39,16 @@ public class TodoService {
 				() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "No Todo Exists WIth the Specified Id"));
 	}
 
-	public List<TodoDto> retreive(final UUID userId) {
-		return getUser(userId).getTodos().parallelStream()
+	public ResponseEntity<List<TodoDto>> retreive(final UUID userId) {
+		return ResponseEntity.ok(getUser(userId).getTodos().parallelStream()
 				.map(todo -> TodoDto.builder().createdAt(todo.getCreatedAt()).description(todo.getDescription())
 						.dueDate(todo.getDueDate()).id(todo.getId()).isActive(todo.isActive()).title(todo.getTitle())
 						.updatedAt(todo.getUpdatedAt())
 						.isExpired(LocalDate.now().isAfter(todo.getDueDate()) ? true : false).build())
-				.collect(Collectors.toList());
+				.collect(Collectors.toList()));
 	}
 
-	public void create(final UUID userId, final TodoCreationRequestDto todoCreationRequest) {
+	public ResponseEntity<?> create(final UUID userId, final TodoCreationRequestDto todoCreationRequest) {
 		final var user = getUser(userId);
 		final var todo = new Todo();
 		todo.setActive(true);
@@ -54,37 +56,50 @@ public class TodoService {
 		todo.setTitle(todoCreationRequest.getTitle());
 		todo.setDueDate(todoCreationRequest.getDueDate());
 		todo.setUserId(user.getId());
-		todoRepository.save(todo);
+		final var savedTodo = todoRepository.save(todo);
+		if (savedTodo != null)
+			return responseUtil.todoCreationSuccessResponse();
+		else
+			return responseUtil.genericFailureResponse();
 	}
 
-	public void update(final UUID userId, final TodoUpdationRequestDto todoUpdationRequest) {
+	public ResponseEntity<?> update(final UUID userId, final TodoUpdationRequestDto todoUpdationRequest) {
 		final var todo = getTodo(todoUpdationRequest.getId());
 
 		if (!todo.getUserId().equals(userId))
-			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Todo Can Only Be Updated By It's Creater");
+			return responseUtil.genericUnauthorizeResponse();
 
 		todo.setDescription(todoUpdationRequest.getDescription());
 		todo.setDueDate(todoUpdationRequest.getDueDate());
-		todoRepository.save(todo);
+		final var updatedTodo = todoRepository.save(todo);
+		if (updatedTodo != null)
+			return responseUtil.todoUpdationSuccessResponse();
+		else
+			return responseUtil.genericFailureResponse();
 	}
 
-	public void update(UUID userId, UUID todoId) {
+	public ResponseEntity<?> update(UUID userId, UUID todoId) {
 		final var todo = getTodo(todoId);
 
 		if (!todo.getUserId().equals(userId))
-			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Todo Can Only Be Updated By It's Creater");
+			return responseUtil.genericUnauthorizeResponse();
 
 		todo.setActive(false);
-		todoRepository.save(todo);
+		final var updatedTodo = todoRepository.save(todo);
+		if (updatedTodo != null)
+			return responseUtil.todoUpdationSuccessResponse();
+		else
+			return responseUtil.genericFailureResponse();
 	}
 
-	public void remove(final UUID userId, final UUID todoId) {
+	public ResponseEntity<?> remove(final UUID userId, final UUID todoId) {
 		final var todo = getTodo(todoId);
 
 		if (!todo.getUserId().equals(userId))
-			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Todo Can Only Be Deleted By It's Creater");
+			return responseUtil.genericUnauthorizeResponse();
 
 		todoRepository.deleteById(todoId);
+		return responseUtil.todoDeletionSuccessResponse();
 	}
 
 }
