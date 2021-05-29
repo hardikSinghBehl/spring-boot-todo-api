@@ -10,9 +10,9 @@
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.hardik</groupId>
-	<artifactId>spring-react-todo-api</artifactId>
+	<artifactId>spring-boot-todo-api</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>spring-react-todo-api</name>
+	<name>spring-boot-todo-api</name>
 	<description>Vanilla Todo Application Using Spring Boot</description>
 	<properties>
 		<java.version>15</java.version>
