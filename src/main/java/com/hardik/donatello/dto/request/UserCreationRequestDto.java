@@ -1,5 +1,6 @@
 package com.hardik.donatello.dto.request;
 
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
@@ -12,7 +13,7 @@ import lombok.Getter;
 @Getter
 @Builder
 @JacksonStdImpl
-public class UserDetailUpdationRequest {
+public class UserCreationRequestDto {
 
 	@Schema(description = "Firstname of user", required = true, example = "Hardik Singh")
 	@NotBlank
@@ -23,4 +24,16 @@ public class UserDetailUpdationRequest {
 	@NotBlank
 	@Size(max = 50)
 	private final String lastName;
+
+	@Schema(description = "Email-id of user", required = true, example = "hardik.behl7444@gmail.com")
+	@NotBlank
+	@Email
+	@Size(max = 50)
+	private final String emailId;
+
+	@Schema(description = "Password of user", required = true)
+	@NotBlank
+	@Size(min = 5, max = 15)
+	private final String password;
+
 }

@@ -13,17 +13,7 @@ import lombok.Getter;
 @Getter
 @Builder
 @JacksonStdImpl
-public class UserCreationRequest {
-
-	@Schema(description = "Firstname of user", required = true, example = "Hardik Singh")
-	@NotBlank
-	@Size(max = 50)
-	private final String firstName;
-
-	@Schema(description = "Lastname of user", required = true, example = "Behl")
-	@NotBlank
-	@Size(max = 50)
-	private final String lastName;
+public class UserLoginRequestDto {
 
 	@Schema(description = "Email-id of user", required = true, example = "hardik.behl7444@gmail.com")
 	@NotBlank

@@ -12,16 +12,15 @@ import lombok.Getter;
 @Getter
 @Builder
 @JacksonStdImpl
-public class UserPasswordUpdationRequest {
+public class UserDetailUpdationRequestDto {
 
-	@Schema(description = "Current Password of user", required = true)
+	@Schema(description = "Firstname of user", required = true, example = "Hardik Singh")
 	@NotBlank
-	@Size(min = 5, max = 15)
-	private final String oldPassword;
+	@Size(max = 50)
+	private final String firstName;
 
-	@Schema(description = "New Password of user", required = true)
+	@Schema(description = "Lastname of user", required = true, example = "Behl")
 	@NotBlank
-	@Size(min = 5, max = 15)
-	private final String newPassword;
-
+	@Size(max = 50)
+	private final String lastName;
 }

@@ -1,7 +1,6 @@
 package com.hardik.donatello.dto.request;
 
 import java.time.LocalDate;
-import java.util.UUID;
 
 import javax.validation.constraints.FutureOrPresent;
 import javax.validation.constraints.NotBlank;
@@ -16,11 +15,12 @@ import lombok.Getter;
 @Getter
 @Builder
 @JacksonStdImpl
-public class TodoUpdationRequest {
+public class TodoCreationRequestDto {
 
-	@Schema(description = "Id of TODO to be updated", required = true, example = "ca74bac4-253d-4c4f-a446-4e07fa338810")
+	@Schema(description = "Title of TODO", required = true, example = "Learn spring-boot")
 	@NotBlank
-	private final UUID id;
+	@Size(max = 100)
+	private final String title;
 
 	@Schema(description = "Description of Todo", required = true, example = "Through YT videos")
 	@NotBlank
