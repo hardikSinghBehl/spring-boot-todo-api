@@ -1,0 +1,21 @@
+version: '3'
+services:
+  database:
+    image: postgres
+    ports:
+    - 6432:5432
+    environment:
+      POSTGRES_DB: donatello
+      POSTGRES_USER: donatello
+      POSTGRES_PASSWORD: donatello
+  service:
+    build: .
+    ports:
+    - 9090:8080
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://database/donatello
+      SPRING_DATASOURCE_USERNAME: donatello
+      SPRING_DATASOURCE_PASSWORD: donatello
+      SERVER_SERVLET_CONTEXT_PATH: /donatello
+    depends_on:
+    - database
