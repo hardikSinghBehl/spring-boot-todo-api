@@ -24,9 +24,7 @@ import lombok.AllArgsConstructor;
 public class UserService {
 
 	private final UserRepository userRepository;
-
 	private final PasswordEncoder passwordEncoder;
-
 	private final JwtUtils jwtUtils;
 
 	private User getUser(final UUID userId) {
@@ -74,7 +72,7 @@ public class UserService {
 
 	public void update(UUID userId, UserPasswordUpdationRequestDto userPasswordUpdationRequest) {
 		final var user = getUser(userId);
-		if (!user.getPassword().equals(userPasswordUpdationRequest.getOldPassword()))
+		if (!passwordEncoder.matches(userPasswordUpdationRequest.getOldPassword(), user.getPassword()))
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Wrong Password Provided");
 
 		user.setPassword(passwordEncoder.encode(userPasswordUpdationRequest.getNewPassword()));
