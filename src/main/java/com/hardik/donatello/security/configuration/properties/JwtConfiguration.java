@@ -4,7 +4,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 
 import lombok.Data;
 
-@ConfigurationProperties(prefix = "com.hardik.plutocracy")
+@ConfigurationProperties(prefix = "com.hardik.donatello")
 @Data
 public class JwtConfiguration {
 
