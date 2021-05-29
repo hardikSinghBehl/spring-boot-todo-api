@@ -125,4 +125,12 @@ public class ResponseUtil {
 		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response.toString());
 	}
 
+	public ResponseEntity<?> userDeletionSuccessResponse() {
+		final var response = new JSONObject();
+		response.put(ApiResponse.STATUS, ApiResponse.SUCCESS_STATUS);
+		response.put(ApiResponse.MESSAGE, ApiResponse.USER_DELETION);
+		response.put(ApiResponse.TIMESTAMP, LocalDateTime.now().toString());
+		return ResponseEntity.status(HttpStatus.OK).body(response.toString());
+	}
+
 }

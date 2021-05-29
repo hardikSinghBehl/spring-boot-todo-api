@@ -2,6 +2,7 @@ package com.hardik.donatello.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -43,6 +44,14 @@ public class UserController {
 			@RequestBody(required = true) final UserDetailUpdationRequestDto userDetailUpdationRequestDto,
 			@RequestHeader(name = "Authorization", required = true) @Parameter(hidden = true) final String token) {
 		return userService.update(jwtUtils.extractUserId(token.replace("Bearer ", "")), userDetailUpdationRequestDto);
+	}
+
+	@DeleteMapping
+	@ResponseStatus(HttpStatus.OK)
+	@Operation(summary = "Deletes User's account from the system")
+	public ResponseEntity<?> userAccountDeletionHandler(
+			@RequestHeader(name = "Authorization", required = true) @Parameter(hidden = true) final String token) {
+		return userService.delete(jwtUtils.extractUserId(token.replace("Bearer ", "")));
 	}
 
 }

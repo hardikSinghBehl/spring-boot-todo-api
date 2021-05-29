@@ -94,4 +94,9 @@ public class UserService {
 			return responseUtil.genericFailureResponse();
 	}
 
+	public ResponseEntity<?> delete(UUID userId) {
+		userRepository.deleteById(userId);
+		return responseUtil.userDeletionSuccessResponse();
+	}
+
 }
