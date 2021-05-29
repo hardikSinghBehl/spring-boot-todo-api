@@ -34,7 +34,7 @@ public class CustomValidationMessageAdvice {
 		response.put(ApiResponse.STATUS, ApiResponse.FAILURE_STATUS);
 		response.put(ApiResponse.MESSAGE, errorMessage);
 		response.put(ApiResponse.TIMESTAMP, LocalDateTime.now().toString());
-		return ResponseEntity.badRequest().body(response.toString()e);
+		return ResponseEntity.badRequest().body(response.toString());
 	}
 
 }
