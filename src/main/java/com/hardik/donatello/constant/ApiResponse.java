@@ -24,4 +24,5 @@ public class ApiResponse {
 	public static final String INVALID_TODO_ID = "Invalid todo-id provided, No todo with provided id exists in the system";
 	public static final String INVALID_USER_ID = "Invalid user-id provided, No User with provided id exists in the system";
 	public static final String USER_DELETION = "User's account deleted successfully";
+	public static final String INVALID_JWT = "No User exists in the system corresponding to the provided JWT";
 }
