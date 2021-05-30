@@ -2,20 +2,19 @@ package com.hardik.donatello.service;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import com.hardik.donatello.dto.request.TodoCreationRequestDto;
 import com.hardik.donatello.dto.request.TodoUpdationRequestDto;
 import com.hardik.donatello.dto.response.TodoDto;
 import com.hardik.donatello.entity.Todo;
 import com.hardik.donatello.entity.User;
+import com.hardik.donatello.exception.InvalidTodoIdException;
+import com.hardik.donatello.exception.InvalidUserIdException;
 import com.hardik.donatello.repository.TodoRepository;
 import com.hardik.donatello.repository.UserRepository;
 import com.hardik.donatello.utility.ResponseUtil;
@@ -31,12 +30,11 @@ public class TodoService {
 	private final ResponseUtil responseUtil;
 
 	private User getUser(final UUID userId) {
-		return userRepository.findById(userId).orElseThrow(
-				() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "No User Exists WIth the Specified Id"));
+		return userRepository.findById(userId).orElseThrow(() -> new InvalidUserIdException());
 	}
 
-	private Optional<Todo> getTodo(final UUID todoId) {
-		return todoRepository.findById(todoId);
+	private Todo getTodo(final UUID todoId) {
+		return todoRepository.findById(todoId).orElseThrow(() -> new InvalidTodoIdException());
 	}
 
 	public ResponseEntity<List<TodoDto>> retreive(final UUID userId) {
@@ -64,12 +62,7 @@ public class TodoService {
 	}
 
 	public ResponseEntity<?> update(final UUID userId, final TodoUpdationRequestDto todoUpdationRequest) {
-		final var optionalTodo = getTodo(todoUpdationRequest.getId());
-
-		if (optionalTodo.isEmpty())
-			return responseUtil.todoNotFoundResponse();
-
-		final var todo = optionalTodo.get();
+		final var todo = getTodo(todoUpdationRequest.getId());
 
 		if (!todo.getUserId().equals(userId))
 			return responseUtil.genericUnauthorizeResponse();
@@ -84,12 +77,7 @@ public class TodoService {
 	}
 
 	public ResponseEntity<?> update(UUID userId, UUID todoId) {
-		final var optionalTodo = getTodo(todoId);
-
-		if (optionalTodo.isEmpty())
-			return responseUtil.todoNotFoundResponse();
-
-		final var todo = optionalTodo.get();
+		final var todo = getTodo(todoId);
 
 		if (!todo.getUserId().equals(userId))
 			return responseUtil.genericUnauthorizeResponse();
@@ -103,12 +91,7 @@ public class TodoService {
 	}
 
 	public ResponseEntity<?> remove(final UUID userId, final UUID todoId) {
-		final var optionalTodo = getTodo(todoId);
-
-		if (optionalTodo.isEmpty())
-			return responseUtil.todoNotFoundResponse();
-
-		final var todo = optionalTodo.get();
+		final var todo = getTodo(todoId);
 
 		if (!todo.getUserId().equals(userId))
 			return responseUtil.genericUnauthorizeResponse();

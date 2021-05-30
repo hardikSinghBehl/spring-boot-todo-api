@@ -14,6 +14,7 @@ import com.hardik.donatello.dto.request.UserLoginRequestDto;
 import com.hardik.donatello.dto.request.UserPasswordUpdationRequestDto;
 import com.hardik.donatello.dto.response.UserDetailDto;
 import com.hardik.donatello.entity.User;
+import com.hardik.donatello.exception.InvalidUserIdException;
 import com.hardik.donatello.repository.UserRepository;
 import com.hardik.donatello.security.utility.JwtUtils;
 import com.hardik.donatello.utility.ResponseUtil;
@@ -30,8 +31,7 @@ public class UserService {
 	private final ResponseUtil responseUtil;
 
 	private User getUser(final UUID userId) {
-		return userRepository.findById(userId).orElseThrow(
-				() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "No User Exists WIth the Specified Id"));
+		return userRepository.findById(userId).orElseThrow(() -> new InvalidUserIdException());
 	}
 
 	public ResponseEntity<UserDetailDto> retrieve(final UUID userId) {

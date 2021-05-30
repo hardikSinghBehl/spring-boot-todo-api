@@ -1,4 +1,4 @@
-package com.hardik.donatello.exception;
+package com.hardik.donatello.exception.handler;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -20,7 +20,7 @@ import com.hardik.donatello.constant.ApiResponse;
 
 @Order(Ordered.HIGHEST_PRECEDENCE)
 @ControllerAdvice
-public class CustomValidationMessageAdvice {
+public class ValidationFailureExceptionHandler {
 
 	@ResponseStatus(value = HttpStatus.BAD_REQUEST)
 	@ResponseBody
