@@ -2,11 +2,9 @@ package com.hardik.donatello.service;
 
 import java.util.UUID;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import com.hardik.donatello.dto.request.UserCreationRequestDto;
 import com.hardik.donatello.dto.request.UserDetailUpdationRequestDto;
@@ -84,7 +82,7 @@ public class UserService {
 	public ResponseEntity<?> update(UUID userId, UserPasswordUpdationRequestDto userPasswordUpdationRequest) {
 		final var user = getUser(userId);
 		if (!passwordEncoder.matches(userPasswordUpdationRequest.getOldPassword(), user.getPassword()))
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Wrong Password Provided");
+			return responseUtil.wrongPasswordProvided();
 
 		user.setPassword(passwordEncoder.encode(userPasswordUpdationRequest.getNewPassword()));
 		final var updatedUser = userRepository.save(user);

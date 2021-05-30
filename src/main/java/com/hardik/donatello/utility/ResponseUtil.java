@@ -31,7 +31,7 @@ public class ResponseUtil {
 	public ResponseEntity<?> duplicateEmailIdResponse() {
 		final var response = new JSONObject();
 		response.put(ApiResponse.STATUS, ApiResponse.FAILURE_STATUS);
-		response.put(ApiResponse.MESSAGE, ApiResponse.UNSUCCESSFULL_ACCOUNT_CREATION);
+		response.put(ApiResponse.MESSAGE, ApiResponse.DUPLICATE_EMAIL_ID);
 		response.put(ApiResponse.TIMESTAMP, LocalDateTime.now().toString());
 		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response.toString());
 	}
